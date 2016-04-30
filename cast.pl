@@ -11,7 +11,8 @@ getopts("a:b:th" , \%options);
 
 my $qry = $options{a};                      # Query sequence file in FASTA format
 my $ref = $options{b};                      # Reference genome sequence in FASTA format
-my $dir = "./";
+my $dir = `dirname $0`;
+chomp $dir;
 my $pam = "NGG";
 my $target_length = 23;
 my $pam_length = length $pam;
@@ -26,8 +27,8 @@ my $target_file = "target.fa";
 # Demo
 #-------------------------------------------------------------------------------
 if ($options{t}) {
-	$qry = 'demo/cds.fa';
-	$ref = 'demo/genome.fa';
+	$qry = "$dir/demo/cds.fa";
+	$ref = "$dir/demo/genome.fa";
 }
 
 #-------------------------------------------------------------------------------
@@ -75,7 +76,6 @@ sub find_pam {
 		$seq = $';
 		next if ($1 =~ /T{4}/);
 		my $gc = gc_content($1);
-		print $gc, "\n";
 		next if ($gc < $gc_min or $gc > $gc_max);
 		$target{$seq_id . "." . $i} = $1;
 		$i++;
