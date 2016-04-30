@@ -63,7 +63,7 @@ sub cas_design {
 sub run_cas9off {
 	my $target_file = shift;
 	my $ref = shift;
-	system("$dir/sub/cas9off/offscan.pl -q $target_file -d $ref -a $dir/sub/cas9off/bin/seqmap");
+	system("$dir/sub/cas9off/offscan.pl -q $target_file -d $ref -a $dir/sub/cas9off/bin/seqmap -b $dir/seqmap.out");
 }
 
 sub find_pam {
