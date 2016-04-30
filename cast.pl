@@ -16,6 +16,7 @@ my $pam = "NGG";
 my $target_length = 23;
 my $pam_length = length $pam;
 my $max_target_per_seq = 5;
+my ($gc_min, $gc_max) = (0.4, 0.6);
 my $target_file = "target.fa";
 
 # Usage
@@ -71,11 +72,23 @@ sub find_pam {
 	my $len = $target_length - $pam_length;
 	my $i = 0;
 	while ($seq =~ /(\S{$len}$pam)/) {
+		$seq = $';
+		next if ($1 =~ /T{4}/);
+		my $gc = gc_content($1);
+		print $gc, "\n";
+		next if ($gc < $gc_min or $gc > $gc_max);
 		$target{$seq_id . "." . $i} = $1;
 		$i++;
 		return 1 if $i > $max_target_per_seq;
 	}
 	return $i;
+}
+
+sub gc_content {
+	my $seq = shift;
+	$seq = substr(uc($seq),0,$target_length);
+	my $gc = $seq =~ tr/GC/GC/;
+	return $gc/length($seq);
 }
 
 sub load_fasta {
